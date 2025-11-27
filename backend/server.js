@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 dotenv.config()
 import express from 'express'
+import cookieParser from "cookie-parser";
 const app = express()
 import cors from 'cors'
 import authroutes from './Routes/AuthRoutes/authroute.js'
@@ -16,6 +17,7 @@ app.use(cors({
 }))
 
 // middleware to parse JSON and URL-encoded data
+app.use(cookieParser());
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -27,6 +29,7 @@ app.use('/auth',authroutes)
 // routes test
 app.get('/', (req, res) => {
     res.send('Hello World!')
+    
 })
 
 
