@@ -1,18 +1,10 @@
 import bycrptjs from 'bcryptjs'
 import User from '../models/authmodel.js'
 import jwt from 'jsonwebtoken'
-import Redis from 'ioredis'
+import redis from '../config/redis.js'
 import dotenv from "dotenv";
 dotenv.config();
-const redis = new Redis(process.env.Redis_URL);
 
-
-redis.on('connect', () => {
-    console.log('Connected to Redis');
-});
-redis.on('error', (err) => {
-    console.log('Redis connection error:', err);
-});
 const refreshtoken = (user) => {
     return jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
 }
