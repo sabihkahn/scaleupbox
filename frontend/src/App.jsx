@@ -1,6 +1,7 @@
 import React from 'react'
 import {  Routes, Route } from 'react-router-dom'
 import Auth from './pages/Auth'
+import "@radix-ui/themes/styles.css";
 
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from './security/protectedroutes';

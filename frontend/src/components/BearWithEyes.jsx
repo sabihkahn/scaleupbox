@@ -41,9 +41,9 @@ export default function FatBear() {
 
     return (
         <div className="flex justify-center mt-20 relative">
-            <h1 className="absolute text-xl left-6 font-mono bottom-[430px]  w-full">
+            {/* <h1 className="absolute text-xl left-6 font-mono bottom-[430px]  w-full">
                 {isDead ? "WHY WHY you killed me 😞" : "Hi I am ekuu 🐻"}
-            </h1>
+            </h1> */}
             <div
                 ref={bearRef}
                 onClick={killBear}

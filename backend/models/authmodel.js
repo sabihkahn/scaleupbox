@@ -20,6 +20,11 @@ const authSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  forgetpasswordtoken:{
+    type: String,
+    required: false,
+    
+  },
   projectsmonolithic:[
     {
     type:mongoose.Schema.Types.ObjectId,

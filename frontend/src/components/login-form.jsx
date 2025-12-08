@@ -19,6 +19,7 @@ export function LoginForm({ className, ...props }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmit, setIsSubmit] = useState(false);
+  const [messageerror, setmessageerror] = useState('')
   const navigate = useNavigate();
 
   // Google login handler
@@ -34,6 +35,7 @@ export function LoginForm({ className, ...props }) {
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
+      setmessageerror(err.response?.data?.message || "Google login failed");
       alert("Google login failed.");
     }
   };
@@ -58,7 +60,8 @@ export function LoginForm({ className, ...props }) {
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || "Login failed");
+      
+      setmessageerror(err.response?.data?.message || "Login failed");
     } finally {
       setIsSubmit(false);
     }
@@ -111,9 +114,9 @@ export function LoginForm({ className, ...props }) {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {password.length > 0 && password.length < 6 && (
+          {password.length > 0 && password.length < 8 && (
             <FieldDescription className="text-red-500">
-              Password must be at least 6 characters long.
+              Password must be at least 8 characters long.
             </FieldDescription>
           )}
         </Field>
@@ -126,6 +129,11 @@ export function LoginForm({ className, ...props }) {
           >
             Login
           </Button>
+          {messageerror && (
+            <FieldDescription className="text-red-500 text-center mt-2">
+              {messageerror}
+            </FieldDescription>
+          )}
         </Field>
 
         <FieldSeparator>Or continue with</FieldSeparator>
@@ -141,10 +149,11 @@ export function LoginForm({ className, ...props }) {
             <Button
               type="button"
               variant="link"
-              onClick={() => navigate("/auth/auth")}
+              onClick={() => navigate("/auth")}
             >
               Sign up
             </Button>
+            <p className="underline cursor-pointer " onClick={()=>{navigate('/forgetpassword')}}>Forget password</p>
           </FieldDescription>
         </Field>
       </FieldGroup>

@@ -1,5 +1,6 @@
 import React from 'react'
 import { GalleryVerticalEnd } from "lucide-react"
+import BearWithEyes from '../components/BearWithEyes'
 import { LoginForm } from "@/components/login-form"
 const AuthLogin = () => {
   return (
@@ -19,12 +20,8 @@ const AuthLogin = () => {
           </div>
         </div>
       </div>
-      <div className="bg-muted relative hidden lg:block">
-        <img
-          src="/placeholder.svg"
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
+      <div className="bg-muted relative hidden lg:flex items-center justify-center">
+        <BearWithEyes />
       </div>
     </div>
   )

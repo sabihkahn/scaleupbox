@@ -3,6 +3,7 @@ import User from '../models/authmodel.js'
 import jwt from 'jsonwebtoken'
 import redis from '../config/redis.js'
 import dotenv from "dotenv";
+import nodemailer from "nodemailer";
 dotenv.config();
 
 const refreshtoken = (user) => {
@@ -16,6 +17,11 @@ export const googleAuth = async (req, res) => {
     const { userfromgoogle } = req;
 
     try {
+
+        if (!userfromgoogle || !userfromgoogle.email) {
+            return res.status(400).json({ message: "Invalid Google user data" })
+        }
+
         let user = await User.findOne({ email: userfromgoogle.email });
 
         if (!user) {
@@ -52,7 +58,7 @@ export const googleAuth = async (req, res) => {
 //creating access token from refresh token
 export const refreshToken = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
-  
+
     if (!refreshToken) {
         return res.status(401).json({ message: "No refresh token provided" });
     }
@@ -112,6 +118,21 @@ export const logout = async (req, res) => {
 export const registerauth = async (req, res) => {
     const { username, email, password, picture } = req.body;
     try {
+
+        if (!username || !email || !password || !picture) {
+            return res.status(400).json({ message: "All fields are required" })
+        }
+
+        if (password.length < 8) {
+            return res.status(400).json({ message: "Password must be at least 8 characters" })
+        }
+        if (email.includes(" ") || !email.includes("@") || !email.includes(".")) {
+            return res.status(400).json({ message: "Invalid email format" })
+        }
+        if (username.length < 3) {
+            return res.status(400).json({ message: "Username must be at least 3 characters" })
+        }
+
         let user = await User.findOne({ email: email });
         if (user) {
             return res.status(400).json({ message: "User already exists" });
@@ -146,6 +167,18 @@ export const registerauth = async (req, res) => {
 export const loginauth = async (req, res) => {
     const { email, password } = req.body;
     try {
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "All fields are required" })
+        }
+
+        if (password.length < 8) {
+            return res.status(400).json({ message: "Password must be at least 8 characters" })
+        }
+        if (email.includes(" ") || !email.includes("@") || !email.includes(".")) {
+            return res.status(400).json({ message: "Invalid email format" })
+        }
+
         let user = await User.findOne({ email: email });
         if (!user) {
             return res.status(400).json({ message: "User does not exist" });
@@ -158,11 +191,12 @@ export const loginauth = async (req, res) => {
         const refreshToken = refreshtoken(user);
 
 
-        await redis.set(user._id.toString(), refreshToken, 'EX', 7 * 24 * 60 * 60,((err,res)=>{console.log("this is error",err) 
-            console.log("this is res",res)
+        await redis.set(user._id.toString(), refreshToken, 'EX', 7 * 24 * 60 * 60, ((err, res) => {
+            console.log("this is error", err)
+            console.log("this is res", res)
         }))
-        
-        
+
+
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: false, // true in production
@@ -173,5 +207,106 @@ export const loginauth = async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Something went wrong" });
+    }
+}
+
+// forget password 
+
+export const otpsender = async (req, res) => {
+    try {
+        const { email } = req.body
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" })
+        }
+        if (email.includes(" ") || !email.includes("@") || !email.includes(".")) {
+            return res.status(400).json({ message: "Invalid email format" })
+        }
+
+        let user = await User.findOne({ email: email });
+        if (!user) {
+            return res.status(400).json({ message: "User does not exist" })
+        }
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        // saving otp to database
+
+        user.forgetpasswordtoken = otp.toString();
+        await user.save();
+
+        // sending otp through  email logic here
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.gmail_user,
+                pass: process.env.app_pass
+            }
+        });
+
+        const mailOptions = {
+            from: process.env.gmail_user,
+            to: email,
+            subject: 'Password Reset OTP',
+            text: `Your OTP for password reset is " ${otp} ". It is valid for 1 use only.`
+        };
+        await transporter.sendMail(mailOptions)
+        return res.status(200).send({message:"email sended correctly"})
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Cant send the otp" });
+
+    }
+}
+export const verifyotp = async (req, res) => {
+    try {
+        const { otp, email } = req.body
+        if (!otp) {
+            return res.status(400).send({ message: "otp is required" })
+        }
+        const user = await User.findOne({ email: email })
+        if (!user) {
+            return res.status(400).send({ message: "user dont exist can reset the password" })
+        }
+        const forgetpasswordtoken = user.forgetpasswordtoken
+        if (forgetpasswordtoken !== otp) {
+            return res.status(400).send({ message: "otp is invalid" })
+        }
+
+        return res.status(200).send({ message: "OTP verified successfully" });
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send({ message: "cant change pass error occur" })
+
+    }
+}
+export const resetpassword = async (req, res) => {
+    try {
+        const { newpass, email,otp } = req.body
+        const user = await User.findOne({ email: email })
+        if (!newpass || !email) {
+            return res.status(400).send({ message: "all field`s are required" })
+        }
+        if (newpass.length < 8) {
+            return res.status(400).send({ message: "the password must be atleast 8 character long" })
+        }
+        if (email.includes(" ") || !email.includes("@") || !email.includes(".")) {
+            return res.status(400).json({ message: "Invalid email format" })
+        }
+        if(otp !== user.forgetpasswordtoken){
+            return res.status(400).send({message:"otp is invalid"})
+        }
+        
+        if(!user){
+            return res.status(400).send({message:"user does`t exist"})
+        }
+        const hashedPassword = await bycrptjs.hash(newpass,10)
+        user.password = hashedPassword
+        await user.save()
+        user.forgetpasswordtoken = 'kjasjhahsdkhkasjhd89273h89y2hjiy89'
+       return res.status(200).send({message:"password reset successfull"})
+
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send({ message: "can`t reset password" })
+
     }
 }
