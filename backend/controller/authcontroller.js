@@ -301,12 +301,47 @@ export const resetpassword = async (req, res) => {
         const hashedPassword = await bycrptjs.hash(newpass,10)
         user.password = hashedPassword
         await user.save()
-        user.forgetpasswordtoken = 'kjasjhahsdkhkasjhd89273h89y2hjiy89'
+        user.forgetpasswordtoken = 'kjasjhahsdkhk.asjhd89273h89y2hjiy89..'
        return res.status(200).send({message:"password reset successfull"})
 
     } catch (error) {
         console.log(error)
         return res.status(400).send({ message: "can`t reset password" })
 
+    }
+}
+export const changeexistingpassword = async (req, res) => {
+    try {
+        const { email, password,newpass } = req.body
+        if (!email || !password) {
+            return res.status(400).send({ message: "all fields are required" })
+        }
+        if (password.length < 8) {
+            return res.status(400).send({ message: "the password must be atleast 8 character long" })
+        }
+        if (newpass.length < 8) {
+            return res.status(400).send({ message: "the password must be atleast 8 character long" })
+        }
+        if (email.includes(" ") || !email.includes("@") || !email.includes(".")) {
+            return res.status(400).json({ message: "Invalid email format" })
+        }
+        const user = await User.findOne({email:email}) 
+        if(!user){
+            return res.status(400).send({message:"no user existed"})
+        }   
+        const isMached = bycrptjs.compare(password,user.password)
+        if(!isMached){
+            return res.status(400).send({message:"password does`t match to old password"})
+        }
+        const hashedPassword = await bycrptjs.hash(newpass,10)
+        user.password = hashedPassword
+        await user.save()
+        
+        return res.status(200).send({message:"password reset successfully"})
+        
+
+    } catch (error) {
+        console.log(error);
+return res.status(500).send({message:"somehing went wrong while changing password"})
     }
 }
