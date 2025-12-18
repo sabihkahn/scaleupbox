@@ -25,18 +25,33 @@ const authSchema = new mongoose.Schema({
     required: false,
     
   },
-  projectsmonolithic:[
+  Projects: [
     {
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"Project"
+      type:mongoose.Schema.Types.ObjectId,
+       ref :"Projects"
     }
-],
-  projectMicroservices:[
-    {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"MicroserviceProject"
-    }
-  ]
+  ],
+
+  totalWebsites:{
+    type:Number,
+    default:0
+  },
+  publishedwebsites:{
+    type:Number,
+    default:0
+  },
+  availableTokens:{
+    type:Number,
+    default:5
+  },
+  subscription:{
+    type:String,
+   enum:["free","Base","Master"]
+  },
+  Totalviews:{
+    type:Number,
+    default:0
+  }
 
 }, { timestamps: true })
 

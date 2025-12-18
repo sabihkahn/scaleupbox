@@ -14,4 +14,5 @@ router.post('/user/getotp',otpsender)
 router.post('/user/verifyotp',verifyotp)
 router.post('/user/resetpass',resetpassword)
 router.post('/user/change/existingpass', changeexistingpassword)
+
 export default router;

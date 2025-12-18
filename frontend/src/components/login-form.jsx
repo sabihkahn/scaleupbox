@@ -153,8 +153,8 @@ export function LoginForm({ className, ...props }) {
             >
               Sign up
             </Button>
-            <p className="underline cursor-pointer " onClick={()=>{navigate('/forgetpassword')}}>Forget password</p>
           </FieldDescription>
+            <p className="underline cursor-pointer " onClick={()=>{navigate('/forgetpassword')}}>Forget password</p>
         </Field>
       </FieldGroup>
     </form>

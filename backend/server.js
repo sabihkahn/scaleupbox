@@ -7,9 +7,12 @@ import cors from 'cors'
 import authroutes from './Routes/AuthRoutes/authroute.js'
 import  connectDB  from './config/db.js'
 import {rateLimitMiddleware} from './middleware/ratelimiting.js'
+import dashboardroutes from './Routes/DashboardRoutes/dashboardroutes.js'
+
 app.set("trust proxy", 1);
 
 // connecting database 
+
 connectDB()
 app.use(cors({
     origin: [
@@ -21,16 +24,20 @@ app.use(cors({
 }))
 
 // middleware to parse JSON and URL-encoded data
+
 app.use(cookieParser());
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(rateLimitMiddleware(5,30)) // 5 requests per 30s
-// imported routes
-app.use('/auth',authroutes)
 
+// imported routes
+
+app.use('/auth',authroutes)
+app.use('/user',dashboardroutes)
 
 
 // routes test
+
 app.get('/', (req, res) => {
     res.send('Hello World!')
     

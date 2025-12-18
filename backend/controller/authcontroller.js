@@ -302,6 +302,7 @@ export const resetpassword = async (req, res) => {
         user.password = hashedPassword
         await user.save()
         user.forgetpasswordtoken = 'kjasjhahsdkhk.asjhd89273h89y2hjiy89..'
+        await user.save()
        return res.status(200).send({message:"password reset successfull"})
 
     } catch (error) {

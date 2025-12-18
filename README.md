@@ -278,6 +278,7 @@ frontend/
 - ✅ **Protected Routes**: Dashboard and protected endpoints
 - ✅ **Token-based Authorization**: JWT validation
 
+
 ### Image Management
 - ✅ **Cloudinary Integration**: Cloud-based image storage
 - ✅ **User Profile Pictures**: Upload and manage profile images
@@ -292,11 +293,11 @@ frontend/
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/auth/signup` | Register a new user |
-| POST | `/auth/login` | Login with credentials |
-| POST | `/auth/google` | Google OAuth callback |
-| POST | `/auth/logout` | Logout user |
-| POST | `/auth/refresh` | Refresh access token |
+| POST | `/auth/user/signup` | Register a new user |
+| POST | `/auth/user/login` | Login with credentials |
+| POST | `/auth/user/google` | Google OAuth callback |
+| POST | `/auth/user/logout` | Logout user |
+| POST | `/auth/user/refresh` | Refresh access token |
 
 ## 🔐 Environment Variables
 

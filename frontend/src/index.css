@@ -133,3 +133,7 @@
 .animate-slide-in {
   animation: slideIn 0.25s ease-out;
 }
+body{
+  margin: 0;
+  padding: 0;
+}

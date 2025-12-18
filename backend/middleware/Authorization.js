@@ -1,7 +1,8 @@
 import express from 'express';
-import User from '../models/authmodel'
+import User from '../models/authmodel.js'
 import jwt from 'jsonwebtoken';
-
+import dotenv from 'dotenv'
+dotenv.config()
 
 export const  authorization = async(req,res,next)=>{
     try {
@@ -10,12 +11,18 @@ export const  authorization = async(req,res,next)=>{
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.id);
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const user = await User.findById(decoded.id).populate({
+            path:"Projects",
+            options:{
+                limit:3,
+                sort: { createdAt: -1 }
+            }
+        })
         if (!user) {
-            return res.status(401).json({ message: "Unauthorized" });
+            return res.status(401).json({ message: "Unauthorized user" });
         }
-
+   
         req.user = user; // attach user to request it will give the data 
         next();
     } catch (error) {
