@@ -12,7 +12,7 @@ import Card from '../components/Card';
 import Bgremover from './Bgremover';
 import { useContext } from 'react';
 import { DashboardContext } from '../context/DashboardContext';
-
+import ImageStroge from './ImageStroge';
 // import { useEffect } from 'react';
 
 // import axios from 'axios';
@@ -42,7 +42,7 @@ console.log(currentpage);
 
 
           {/* cards */}
-       {currentpage == "Bgremover" ? <Bgremover/> : <div><Card /></div>}
+          {currentpage == "Bgremover" ? <Bgremover /> : currentpage == "ImageStroge" ? <ImageStroge /> : <div><Card /></div>}
           {/* Card closed */}
         </div>
 

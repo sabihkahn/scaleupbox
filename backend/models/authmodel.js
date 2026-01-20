@@ -25,7 +25,10 @@ const authSchema = new mongoose.Schema({
     required: false,
     
   },
-
+  imgstroage:{
+    type: Array,
+    default: []
+  },
   bgremoveimgs:{
     type:Array,
     default:[]

@@ -10,6 +10,7 @@ import {rateLimitMiddleware} from './middleware/ratelimiting.js'
 import dashboardroutes from './Routes/DashboardRoutes/dashboardroutes.js'
 import aiwebsiteroute from './Routes/AIroutes/airoute.js'
 import removebgroute from './Routes/rmbg/removebg.js'
+import  imgsavedroute from './Routes/imgsaveddb/imgdbsave.js'
 app.set("trust proxy", 1);
 
 // connecting database 
@@ -37,6 +38,7 @@ app.use('/auth',authroutes)
 app.use('/user',dashboardroutes)
 app.use('/ai',aiwebsiteroute)
 app.use('/photo',removebgroute)
+app.use('/imgstorage',imgsavedroute)
 // routes test
 
 app.get('/', (req, res) => {

@@ -14,6 +14,7 @@ motion
 
 import { useContext } from 'react';
 import { DashboardContext } from '../context/DashboardContext';
+import { Upload } from 'lucide-react';
 
 const Sidebar = () => {
     const { setcurrentpage } = useContext(DashboardContext);
@@ -50,15 +51,15 @@ const Sidebar = () => {
                        onClick={() => handelclik("Bgremover")}
                   >
                       <CubeIcon className="h-6" />
-                      <span>Background remover</span>
+                      <span>BG remover</span>
                   </div>
 
                   <div
                       className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
-                      onClick={() => navigate("/mywebsites")}
+                      onClick={() => handelclik("ImageStroge")}
                   >
-                      <ChartBarIcon className="h-6" />
-                      <span> ///// </span>
+                      <Upload className='h-6' />
+                      <span> Image Storage  </span>
                   </div>
 
                   <div
