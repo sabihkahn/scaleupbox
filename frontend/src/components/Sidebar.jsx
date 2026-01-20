@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
     HomeIcon,
@@ -8,11 +8,27 @@ import {
     XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { motion, AnimatePresence } from "framer-motion";
+import Dashboard from '../pages/Dashboard';
 motion
 
-const Sidebar = () => {
 
+import { useContext } from 'react';
+import { DashboardContext } from '../context/DashboardContext';
+
+const Sidebar = () => {
+    const { setcurrentpage } = useContext(DashboardContext);
+    const [currentpage1, setcurrentpage1] = useState('')
     const navigate = useNavigate()
+    console.log(currentpage1);
+    
+
+
+  const handelclik = (data) => {
+    setcurrentpage(data);
+    setcurrentpage1(currentpage1)
+ 
+  }
+
   return (
     <>
           <div className=' hidden lg:flex flex-col  p-10 h-screen border-2 w-[22%] bg-gray-900 text-amber-50' >
@@ -23,7 +39,7 @@ const Sidebar = () => {
 
                   <div
                       className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
-                      onClick={() => navigate("/dashboard")}
+                      onClick={() => handelclik("home")}
                   >
                       <HomeIcon className="h-6" />
                       <span>Home</span>
@@ -31,10 +47,10 @@ const Sidebar = () => {
 
                   <div
                       className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
-                      onClick={() => navigate("/aibuilder")}
+                       onClick={() => handelclik("Bgremover")}
                   >
                       <CubeIcon className="h-6" />
-                      <span>AI Builder</span>
+                      <span>Background remover</span>
                   </div>
 
                   <div
@@ -42,7 +58,7 @@ const Sidebar = () => {
                       onClick={() => navigate("/mywebsites")}
                   >
                       <ChartBarIcon className="h-6" />
-                      <span>My Websites</span>
+                      <span> ///// </span>
                   </div>
 
                   <div

@@ -8,7 +8,8 @@ import authroutes from './Routes/AuthRoutes/authroute.js'
 import  connectDB  from './config/db.js'
 import {rateLimitMiddleware} from './middleware/ratelimiting.js'
 import dashboardroutes from './Routes/DashboardRoutes/dashboardroutes.js'
-
+import aiwebsiteroute from './Routes/AIroutes/airoute.js'
+import removebgroute from './Routes/rmbg/removebg.js'
 app.set("trust proxy", 1);
 
 // connecting database 
@@ -28,14 +29,14 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(rateLimitMiddleware(5,30)) // 5 requests per 30s
+app.use(rateLimitMiddleware(10,15)) // 5 requests per 30s
 
 // imported routes
 
 app.use('/auth',authroutes)
 app.use('/user',dashboardroutes)
-
-
+app.use('/ai',aiwebsiteroute)
+app.use('/photo',removebgroute)
 // routes test
 
 app.get('/', (req, res) => {

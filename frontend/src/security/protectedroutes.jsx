@@ -1,51 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
+import api from "../api/Axiosinterceptor"; // Axios instance with interceptor
 
 const ProtectedRoute = ({ children }) => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-
-  const authhandel = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      if (token) {
-     setTimeout(() => {
-       setLoading(false)
-     }, 0);
-      }
-
-      if (!token) {
-        await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/token/refresh`, {}, {
-          withCredentials: true
-        }).then((res) => {
-          localStorage.setItem('token', res.data.accessToken)
-          setLoading(false)
-
-        }).catch((err) => {
-          localStorage.removeItem('token')
-          console.log(err);
-          navigate('/auth')
-
-        })
-
-      }
-    } catch (error) {
-      console.log(error);
-
-    }
-
-  }
-
+  const navigate = useNavigate();
 
   useEffect(() => {
-authhandel()
-  }, [])
+    const verifyAuth = async () => {
+      try {
+      await api.get("/auth/user/protected"); // Uses interceptor: auto token & refresh
+        setLoading(false);
+      
+      } catch (err) {
+        localStorage.removeItem("token");
+        navigate("/auth");
+        console.log(err);
+        
+      }
+    };
 
+    verifyAuth();
+  }, []);
 
-
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>; // show spinner while verifying
 
   return children;
 };

@@ -36,7 +36,7 @@ export function SignupForm({
       setmessageerror(res.data.message)
       localStorage.setItem("token", res.data.accessToken);
       navigate("/dashboard");
-
+        setTimeout(() => { window.location.reload() }, 1000);
     }).catch((err) => {
       console.log(err);
       setmessageerror(err.response.data.message)
@@ -92,6 +92,7 @@ export function SignupForm({
       setissubmit(false)
       if (localStorage.getItem("token")) {
         navigate("/dashboard")
+          .then(() => { window.location.reload() })
       }
     }
   }
@@ -99,6 +100,7 @@ export function SignupForm({
     const token = localStorage.getItem("token")
     if (token) {
       navigate("/dashboard")
+      .then(()=>{window.location.reload()})
     }
   }, [])
 

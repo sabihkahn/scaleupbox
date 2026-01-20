@@ -12,21 +12,13 @@ export const  authorization = async(req,res,next)=>{
         }
 
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        const user = await User.findById(decoded.id).populate({
-            path:"Projects",
-            options:{
-                limit:3,
-                sort: { createdAt: -1 }
-            }
-        })
-        if (!user) {
-            return res.status(401).json({ message: "Unauthorized user" });
-        }
-   
-        req.user = user; // attach user to request it will give the data 
+
+        req.id = decoded.id; // attach user to request it will give the data 
+        
         next();
+        
     } catch (error) {
-        console.log(error);
+        console.log("error in authorization",error);
         return res.status(400).send({message:"user authorizatrion failed"})
     }
 }

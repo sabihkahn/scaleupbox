@@ -9,16 +9,26 @@ import {
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import Card from '../components/Card';
+import Bgremover from './Bgremover';
+import { useContext } from 'react';
+import { DashboardContext } from '../context/DashboardContext';
+
+// import { useEffect } from 'react';
+
+// import axios from 'axios';
+
 
 const Dashboard = () => {
 
 
+  const { currentpage } = useContext(DashboardContext);
 
+console.log(currentpage);
 
   return (
     <>
 
-      <div className=" h-screen w-full m-0 p-0 flex flex-col lg:flex-row">
+      <div className=" lg:overflow-y-hidden h-screen w-full m-0 p-0 flex flex-col lg:flex-row">
 
         {/* left div with 22percent width */}
 
@@ -32,10 +42,10 @@ const Dashboard = () => {
 
 
           {/* cards */}
-          <Card />
+       {currentpage == "Bgremover" ? <Bgremover/> : <div><Card /></div>}
           {/* Card closed */}
         </div>
-  
+
 
       </div>
 
@@ -43,5 +53,6 @@ const Dashboard = () => {
     </>
   )
 }
+
 
 export default Dashboard

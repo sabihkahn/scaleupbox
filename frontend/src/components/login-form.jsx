@@ -33,6 +33,7 @@ export function LoginForm({ className, ...props }) {
       );
       localStorage.setItem("token", res.data.accessToken);
       navigate("/dashboard");
+      setTimeout(() => { window.location.reload() }, 1000);
     } catch (err) {
       console.error(err);
       setmessageerror(err.response?.data?.message || "Google login failed");
@@ -58,6 +59,7 @@ export function LoginForm({ className, ...props }) {
       alert(res.data.message);
       localStorage.setItem("token", res.data.accessToken);
       navigate("/dashboard");
+      setTimeout(() => { window.location.reload() }, 1000);
     } catch (err) {
       console.error(err);
       
@@ -70,7 +72,10 @@ export function LoginForm({ className, ...props }) {
   // Redirect if already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) navigate("/dashboard");
+    if (token) {
+      navigate("/dashboard");
+      setTimeout(() => { window.location.reload() }, 1000);
+    }
   }, [navigate]);
 
   return (

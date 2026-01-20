@@ -1,5 +1,5 @@
 import React from 'react'
-import {  Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Auth from './pages/Auth'
 import "@radix-ui/themes/styles.css";
 
@@ -12,20 +12,20 @@ const App = () => {
 
 
   return (
-  <>
+    <>
 
       <Routes>
-        
-        <Route path='/dashboard' element={ 
+
+        <Route path='/dashboard' element={
           <ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path='/forgetpassword' element={<Forgetpassword/>} />
-        <Route path='/auth' element={ <Auth />} />
+        <Route path='/forgetpassword' element={<Forgetpassword />} />
+        <Route path='/auth' element={<Auth />} />
         <Route path='/auth/login' element={<AuthLogin />} />
       </Routes>
-     
 
 
-  </>
+
+    </>
   )
 }
 

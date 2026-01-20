@@ -1,7 +1,11 @@
 import React from "react";
 import { HomeIcon, CubeIcon, ChartBarIcon } from "@heroicons/react/24/outline";
-
+import { DashboardContext } from "../context/DashboardContext";
+import { useContext } from "react";
 const Card = () => {
+    const { dashboardData, loading, error } = useContext(DashboardContext);
+    console.log('error from card',error);
+    
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -11,7 +15,7 @@ const Card = () => {
                         <HomeIcon className="h-6 w-6" />
                     </div>
                     <h3 className="text-lg font-semibold text-gray-800">Total Websites</h3>
-                    <p className="text-2xl font-bold text-gray-900 mt-2">12</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-2">dsfsdf</p>
                 </div>
 
                 {/* Card 2 */}
@@ -20,7 +24,7 @@ const Card = () => {
                         <CubeIcon className="h-6 w-6" />
                     </div>
                     <h3 className="text-lg font-semibold text-gray-800">Published Sites</h3>
-                    <p className="text-2xl font-bold text-gray-900 mt-2">4</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-2">fdsfs</p>
                 </div>
 
                 {/* Card 3 */}
@@ -29,7 +33,7 @@ const Card = () => {
                         <ChartBarIcon className="h-6 w-6" />
                     </div>
                     <h3 className="text-lg font-semibold text-gray-800">Total Tokens</h3>
-                    <p className="text-2xl font-bold text-gray-900 mt-2">5</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-2">{loading ? 'loading' : dashboardData?.availableTokens}</p>
                 </div>
             </div>
         </div>

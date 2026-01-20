@@ -11,10 +11,29 @@ import {
 } from "@heroicons/react/24/outline";
 import { motion, AnimatePresence } from "framer-motion";
 motion
-const Header = () => {
 
+import { useContext } from 'react';
+import { DashboardContext } from '../context/DashboardContext';
+import axios from 'axios';
+const Header = () => {
+    const { dashboardData, loading, error } = useContext(DashboardContext);
     const [show, setshow] = useState(false)
     const navigate = useNavigate('')
+    console.log(error);
+    const token = localStorage.getItem('token')
+  const handelsubmit = async () => {
+    try {
+        await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/user/logout`,{},{headers:{Authorization:`Bearer ${token}`},withCredentials:true}).then((res)=>{
+            console.log(res.data);
+            localStorage.clear()
+            navigate('/auth')
+        })
+    } catch (error) {
+        console.log('error while logout',error);
+        
+    }
+  }
+
     return (
         <>
             <AnimatePresence>
@@ -60,7 +79,11 @@ const Header = () => {
                                     <Cog6ToothIcon className="h-6" />
                                     <span>Settings</span>
                                 </div>
-
+                              <div>
+                                  <button onClick={handelsubmit} className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition">
+                                        logout
+                                    </button>
+                              </div>
 
 
                             </div>
@@ -79,19 +102,22 @@ const Header = () => {
 
                 <div>
                     <h2 className="text-xl font-semibold text-gray-800">
-                        Welcome, <span className="text-indigo-500">User</span>
+                        Welcome, <span className="text-indigo-500">{loading ? 'loading' : dashboardData?.username}</span>
                     </h2>
                 </div>
 
                 {/* Right side: Button + Profile */}
                 <div className="flex items-center gap-4">
                     {show ? <XMarkIcon className=' text- h-6 lg:hidden ' onClick={() => { setshow(false) }} /> : <Bars3Icon className=' text- h-6 lg:hidden ' onClick={() => { setshow(true) }} />}
-                    <button className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition">
+                    <button className="px-3 text-sm py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition">
                         Create Now
                     </button>
+                    {window.innerWidth > 500 ? <button onClick={handelsubmit} className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition">
+                        logout
+                    </button> : ''}
                     <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-500">
                         <img
-                            src="https://i.pravatar.cc/100"
+                            src={dashboardData?.picture || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4YreOWfDX3kK-QLAbAL4ufCPc84ol2MA8Xg&s'}
                             alt="Profile"
                             className="w-full h-full object-cover"
                         />

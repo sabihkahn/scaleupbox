@@ -345,4 +345,18 @@ export const changeexistingpassword = async (req, res) => {
         console.log(error);
 return res.status(500).send({message:"somehing went wrong while changing password"})
     }
+} 
+
+export const protectedroute = async (req,res)=>{
+    try {
+        const id = req.id
+        const user = await User.findById(id)
+        if(!user){
+            return res.status(401).json({message:"user dont exist"})
+        }
+        return res.status(200).json({message:"protected route accessed successfully"})
+    } catch (error) {
+        console.log('error in protected route backend  ',error);
+        
+    }
 }
