@@ -15,6 +15,7 @@ import { DashboardContext } from '../context/DashboardContext';
 import ImageStroge from './ImageStroge';
 import Invocegenrator from './Invocegenrator';
 import QRcodegenrator from './QRcodegenrator';
+import Pdfmerger from './Pdfmerger';
 // import { useEffect } from 'react';
 
 // import axios from 'axios';
@@ -44,7 +45,7 @@ console.log(currentpage);
 
 
           {/* cards */}
-          {currentpage == "Bgremover" ? <Bgremover /> : currentpage == "ImageStroge" ? <ImageStroge /> : currentpage == "Invoicegenrator" ? <Invocegenrator /> : currentpage == "Qrcodegenrator" ? <QRcodegenrator /> : <div><Card /></div>}
+          {currentpage == "Bgremover" ? <Bgremover /> : currentpage == "ImageStroge" ? <ImageStroge /> : currentpage == "Invoicegenrator" ? <Invocegenrator /> : currentpage == "Qrcodegenrator" ? <QRcodegenrator /> : currentpage == "Pdfmerger" ? <Pdfmerger /> : <div><Card /></div>}
           {/* Card closed */}
         </div>
 

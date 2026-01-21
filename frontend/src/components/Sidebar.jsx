@@ -14,7 +14,7 @@ motion
 
 import { useContext } from 'react';
 import { DashboardContext } from '../context/DashboardContext';
-import { PersonStanding, QrCode, Upload } from 'lucide-react';
+import { File, PersonStanding, QrCode, Upload } from 'lucide-react';
 
 const Sidebar = () => {
     const { setcurrentpage } = useContext(DashboardContext);
@@ -76,6 +76,14 @@ const Sidebar = () => {
                       <QrCode className='h-6' />
                       <span> Qrcodegenrator  </span>
                   </div>
+                  <div
+                      className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
+                      onClick={() => handelclik("Pdfmerger")}
+                  >
+                      <File className='h-6' />
+                      <span> Pdf merger  </span>
+                  </div>
+                  
                   <div
                       className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
                       onClick={() => navigate("/settings")}
