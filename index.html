@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Invoice Generator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: Inter, Arial, sans-serif;
+  }
+
+  body {
+    margin: 0;
+    background: #0f172a;
+    color: #e5e7eb;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .panel {
+    background: #020617;
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  input, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    background: #020617;
+    border: 1px solid #334155;
+    color: #fff;
+    border-radius: 6px;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #38bdf8;
+  }
+
+  button {
+    cursor: pointer;
+    background: #38bdf8;
+    color: #020617;
+    font-weight: 600;
+  }
+
+  .item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 0.5fr;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .item button {
+    background: #ef4444;
+    color: white;
+  }
+
+  canvas {
+    width: 100%;
+    border-radius: 12px;
+    background: white;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Invoice Generator</h1>
+
+<div class="container">
+
+  <!-- FORM PANEL -->
+  <div class="panel">
+    <h3>Invoice Details</h3>
+
+    <input id="company" placeholder="Company Name" />
+    <input id="client" placeholder="Client Name" />
+    <input id="invoiceNo" placeholder="Invoice #" />
+    <input id="date" type="date" />
+
+    <h3 style="margin-top:20px;">Items</h3>
+
+    <div id="items"></div>
+
+    <button onclick="addItem()">➕ Add Item</button>
+    <button style="margin-top:10px;" onclick="generateInvoice()">📄 Generate Invoice</button>
+    <button style="margin-top:10px;" onclick="downloadInvoice()">⬇ Download PNG</button>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="panel">
+    <canvas id="invoiceCanvas" width="800" height="1100"></canvas>
+  </div>
+
+</div>
+
+<script>
+const canvas = document.getElementById("invoiceCanvas");
+const ctx = canvas.getContext("2d");
+const itemsDiv = document.getElementById("items");
+
+addItem();
+
+function addItem() {
+  const div = document.createElement("div");
+  div.className = "item";
+  div.innerHTML = `
+    <input placeholder="Item name" />
+    <input type="number" placeholder="Qty" value="1" />
+    <input type="number" placeholder="Price" value="0" />
+    <button onclick="this.parentElement.remove()">✕</button>
+  `;
+  itemsDiv.appendChild(div);
+}
+
+function generateInvoice() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Background
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Header
+  ctx.fillStyle = "#020617";
+  ctx.font = "bold 36px Inter";
+  ctx.fillText("INVOICE", 50, 60);
+
+  ctx.font = "18px Inter";
+  ctx.fillText(document.getElementById("company").value, 50, 100);
+  ctx.fillText("Bill To: " + document.getElementById("client").value, 50, 140);
+
+  ctx.fillText("Invoice #: " + document.getElementById("invoiceNo").value, 550, 100);
+  ctx.fillText("Date: " + document.getElementById("date").value, 550, 140);
+
+  // Table Headers
+  let y = 220;
+  ctx.font = "bold 18px Inter";
+  ctx.fillText("Item", 50, y);
+  ctx.fillText("Qty", 420, y);
+  ctx.fillText("Price", 500, y);
+  ctx.fillText("Total", 620, y);
+
+  ctx.beginPath();
+  ctx.moveTo(50, y + 10);
+  ctx.lineTo(750, y + 10);
+  ctx.stroke();
+
+  // Items
+  y += 40;
+  let grandTotal = 0;
+
+  ctx.font = "16px Inter";
+
+  document.querySelectorAll(".item").forEach(item => {
+    const name = item.children[0].value;
+    const qty = Number(item.children[1].value);
+    const price = Number(item.children[2].value);
+    const total = qty * price;
+    grandTotal += total;
+
+    ctx.fillText(name, 50, y);
+    ctx.fillText(qty, 430, y);
+    ctx.fillText(`$${price.toFixed(2)}`, 500, y);
+    ctx.fillText(`$${total.toFixed(2)}`, 620, y);
+
+    y += 30;
+  });
+
+  // Total
+  ctx.font = "bold 22px Inter";
+  ctx.fillText(`Grand Total: $${grandTotal.toFixed(2)}`, 500, y + 40);
+}
+
+function downloadInvoice() {
+  const link = document.createElement("a");
+  link.download = "invoice.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+</script>
+
+</body>
+</html>

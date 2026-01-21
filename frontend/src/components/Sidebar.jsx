@@ -64,6 +64,14 @@ const Sidebar = () => {
 
                   <div
                       className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
+                      onClick={() => handelclik("Invoicegenrator")}
+                  >
+                      <Upload className='h-6' />
+                      <span> Invoice genrator  </span>
+                  </div>
+
+                  <div
+                      className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
                       onClick={() => navigate("/settings")}
                   >
                       <Cog6ToothIcon className="h-6" />
