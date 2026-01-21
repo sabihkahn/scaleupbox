@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { DashboardContext } from "../context/DashboardContext";
-import { Box, Home, Settings, Upload } from "lucide-react";
+import { Box, Home, PersonStanding, QrCode, Settings, Upload } from "lucide-react";
 motion
 const Header = () => {
     const { dashboardData, loading, setcurrentpage } =
@@ -60,6 +60,14 @@ const Header = () => {
                             >
                               <Upload className="h-4" />   Image Storage
                             </button>
+
+                            <button onClick={() => handleNav("Invoicegenrator")} className="text-left">
+                                <PersonStanding />   Invoice Genrator
+                            </button>
+                            <button onClick={() => handleNav("Qrcodegenrator")} className="text-left">
+                                <QrCode />   QRcode Genrator
+                            </button>
+                         
                             <button onClick={() => navigate("/settings")} className="text-left">
                              <Settings />   Settings
                             </button>

@@ -14,6 +14,7 @@ import { useContext } from 'react';
 import { DashboardContext } from '../context/DashboardContext';
 import ImageStroge from './ImageStroge';
 import Invocegenrator from './Invocegenrator';
+import QRcodegenrator from './QRcodegenrator';
 // import { useEffect } from 'react';
 
 // import axios from 'axios';
@@ -43,7 +44,7 @@ console.log(currentpage);
 
 
           {/* cards */}
-          {currentpage == "Bgremover" ? <Bgremover /> : currentpage == "ImageStroge" ? <ImageStroge /> : currentpage == "Invoicegenrator" ? <Invocegenrator /> : <div><Card /></div>}
+          {currentpage == "Bgremover" ? <Bgremover /> : currentpage == "ImageStroge" ? <ImageStroge /> : currentpage == "Invoicegenrator" ? <Invocegenrator /> : currentpage == "Qrcodegenrator" ? <QRcodegenrator /> : <div><Card /></div>}
           {/* Card closed */}
         </div>
 

@@ -3,6 +3,8 @@ import { motion } from "framer-motion"
 import { Briefcase, Laptop, User, Building2 } from "lucide-react"
 motion
 import Bussinessinvoice from "../components/Bussinessinvoice"
+import FreelanceInvoice from "../components/FreelanceInvoice"
+import RentalInvoice from "../components/RentalInvoice"
 
 
 const Invocegenrator = () => {
@@ -39,27 +41,12 @@ const Invocegenrator = () => {
           >
             <Header title="Freelance Invoice" back={() => setCurrentInvoice(null)} />
 
-            <div className="h-56 border border-dashed flex items-center justify-center text-gray-500">
-              Freelance invoice form here
-            </div>
+          
+              <FreelanceInvoice />
+         
           </motion.div>
 
-        ) : currentInvoice === "personal" ? (
-
-          /* ================= PERSONAL ================= */
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="border border-black p-8"
-          >
-            <Header title="Personal Invoice" back={() => setCurrentInvoice(null)} />
-
-            <div className="h-56 border border-dashed flex items-center justify-center text-gray-500">
-              Personal invoice form here
-            </div>
-          </motion.div>
-
-            ) : currentInvoice === "rental" ? (
+        ) : currentInvoice === "rental" ? (
 
               /* ================= RENTAL ================= */
               <motion.div
@@ -67,11 +54,11 @@ const Invocegenrator = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="border border-black   p-8"
               >
-                <Header title="Personal Invoice" back={() => setCurrentInvoice(null)} />
+                <Header title="Rent invoice" back={() => setCurrentInvoice(null)} />
 
-                <div className="h-56 border border-dashed flex items-center justify-center text-gray-500">
-                  rental invoice form here
-                </div>
+              
+                 <RentalInvoice />
+                
               </motion.div>
 
             ) : (
@@ -95,11 +82,7 @@ const Invocegenrator = () => {
               onClick={() => setCurrentInvoice("freelance")}
             />
 
-            <InvoiceBox
-              label="Personal"
-              icon={<User size={30} />}
-              onClick={() => setCurrentInvoice("personal")}
-            />
+         
                   <InvoiceBox
                     label="Rental"
                     icon={<User size={30} />}

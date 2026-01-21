@@ -14,7 +14,7 @@ motion
 
 import { useContext } from 'react';
 import { DashboardContext } from '../context/DashboardContext';
-import { Upload } from 'lucide-react';
+import { PersonStanding, QrCode, Upload } from 'lucide-react';
 
 const Sidebar = () => {
     const { setcurrentpage } = useContext(DashboardContext);
@@ -66,10 +66,16 @@ const Sidebar = () => {
                       className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
                       onClick={() => handelclik("Invoicegenrator")}
                   >
-                      <Upload className='h-6' />
+                      <PersonStanding className='h-6' />
                       <span> Invoice genrator  </span>
                   </div>
-
+                  <div
+                      className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
+                      onClick={() => handelclik("Qrcodegenrator")}
+                  >
+                      <QrCode className='h-6' />
+                      <span> Qrcodegenrator  </span>
+                  </div>
                   <div
                       className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
                       onClick={() => navigate("/settings")}
