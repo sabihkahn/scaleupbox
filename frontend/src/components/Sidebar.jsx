@@ -14,7 +14,7 @@ motion
 
 import { useContext } from 'react';
 import { DashboardContext } from '../context/DashboardContext';
-import { File, PersonStanding, QrCode, Upload } from 'lucide-react';
+import { File, ListCheck, PersonStanding, QrCode, Upload } from 'lucide-react';
 
 const Sidebar = () => {
     const { setcurrentpage } = useContext(DashboardContext);
@@ -83,7 +83,13 @@ const Sidebar = () => {
                       <File className='h-6' />
                       <span> Pdf merger  </span>
                   </div>
-                  
+                  <div
+                      className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
+                      onClick={() => handelclik("ResumeBuilder")}
+                  >
+                      <ListCheck className='h-6' />
+                      <span> Resume Builder  </span>
+                  </div>
                   <div
                       className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
                       onClick={() => navigate("/settings")}
