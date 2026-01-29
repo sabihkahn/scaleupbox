@@ -36,12 +36,17 @@ const authSchema = new mongoose.Schema({
 
   availableTokens:{
     type:Number,
-    default:20
+    default:10
   },
   subscription:{
     type:String,
    enum:["free","Base","Master"]
   },
+  clientinfo:[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "ClientInfo",
+    required: false
+  }]
  
 
 }, { timestamps: true })
