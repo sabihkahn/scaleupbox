@@ -14,7 +14,7 @@ motion
 
 import { useContext } from 'react';
 import { DashboardContext } from '../context/DashboardContext';
-import { File, ListCheck, PenSquareIcon, PersonStanding, QrCode, Upload } from 'lucide-react';
+import { Crop, File, ListCheck, PenSquareIcon, PersonStanding, QrCode, Upload } from 'lucide-react';
 
 const Sidebar = () => {
     const { setcurrentpage } = useContext(DashboardContext);
@@ -97,8 +97,15 @@ const Sidebar = () => {
                       <PenSquareIcon className='h-6' />
                       <span> SaveClientData </span>
                   </div>
+                  <div
+                      className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
+                      onClick={() => handelclik("Cropimage")}
+                  >
+                      <Crop className='h-6' />
+                      <span> Cropimage </span>
+                  </div>
 
-                  {/*  */}
+                  {/* Cropimage */}
                   <div
                       className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
                       onClick={() => navigate("/settings")}

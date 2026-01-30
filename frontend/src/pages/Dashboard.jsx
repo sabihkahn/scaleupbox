@@ -18,9 +18,8 @@ import QRcodegenrator from './QRcodegenrator';
 import Pdfmerger from './Pdfmerger';
 import ResumeBuilder from './ResumeBuilder';
 import SaveClientData from './SaveClientData';
-// import { useEffect } from 'react';
+import Cropimage from './Cropimage';
 
-// import axios from 'axios';
 
 
 const Dashboard = () => {
@@ -47,7 +46,7 @@ console.log(currentpage);
 
 
           {/* cards */}
-          {currentpage == "Bgremover" ? <Bgremover /> : currentpage == "ImageStroge" ? <ImageStroge /> : currentpage == "Invoicegenrator" ? <Invocegenrator /> : currentpage == "Qrcodegenrator" ? <QRcodegenrator /> : currentpage == "Pdfmerger" ? <Pdfmerger /> : currentpage == "ResumeBuilder" ? <ResumeBuilder /> : currentpage == "SaveClientData"? <SaveClientData /> : <div><Card /></div>}
+          {currentpage == "Bgremover" ? <Bgremover /> : currentpage == "ImageStroge" ? <ImageStroge /> : currentpage == "Invoicegenrator" ? <Invocegenrator /> : currentpage == "Qrcodegenrator" ? <QRcodegenrator /> : currentpage == "Pdfmerger" ? <Pdfmerger /> : currentpage == "ResumeBuilder" ? <ResumeBuilder /> : currentpage == "SaveClientData" ? <SaveClientData /> : currentpage == "Cropimage" ? <Cropimage /> : <div><Card /></div>}
           {/* Card closed */}
         </div>
 
