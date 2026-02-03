@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import {
     HomeIcon,
     CubeIcon,
@@ -19,7 +19,7 @@ import { Crop, File, ListCheck, PenSquareIcon, PersonStanding, QrCode, Upload } 
 const Sidebar = () => {
     const { setcurrentpage } = useContext(DashboardContext);
     const [currentpage1, setcurrentpage1] = useState('')
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     console.log(currentpage1);
     
 
@@ -105,13 +105,13 @@ const Sidebar = () => {
                       <span> Cropimage </span>
                   </div>
 
-                  {/* Cropimage */}
+                  {/* ExpenseTracker */}
                   <div
                       className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
-                      onClick={() => navigate("/settings")}
+                      onClick={() => handelclik("ExpenseTracker")}
                   >
-                      <Cog6ToothIcon className="h-6" />
-                      <span>Settings</span>
+                      <ChartBarIcon className="h-6" />
+                      <span>Expense Tracker</span>
                   </div>
 
 
