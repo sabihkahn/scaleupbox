@@ -1,180 +1,198 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Doughnut, Bar } from 'react-chartjs-2';
+import { AlertTriangle, Wallet, Trash2, PlusCircle } from 'lucide-react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
 const ExpenseTracker = () => {
-  const [expensename, setexpensename] = useState('');
-  const [expenseamount, setexpenseamount] = useState('');
-  const [catogery, setcatogery] = useState('');
-  const [date, setdate] = useState('');
-  const [expensedata, setexpensedata] = useState([]);
-  const [fooddata, setfooddata] = useState([]);
+  // 1. STATE MANAGEMENT - Lazy load from LocalStorage
+  const [expensedata, setexpensedata] = useState(() => {
+    const stored = localStorage.getItem('expenses');
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  const [income, setIncome] = useState(() => {
+    return Number(localStorage.getItem('income')) || 0;
+  });
+
+  const [form, setForm] = useState({ name: '', amount: '', category: '', date: '' });
   const [errors, setErrors] = useState({});
+  console.log(errors);
 
-  const id = expensedata.length;
+  // 2. PERSISTENCE
+  useEffect(() => {
+    localStorage.setItem('expenses', JSON.stringify(expensedata));
+    localStorage.setItem('income', income.toString());
+  }, [expensedata, income]);
 
-  const isFormInvalid =
-    !expensename.trim() ||
-    !expenseamount ||
-    expenseamount <= 0 ||
-    !catogery ||
-    !date;
+  // 3. DERIVED DATA (Calculated on every render for efficiency)
+  const totalExpense = expensedata.reduce((sum, e) => sum + Number(e.amount), 0);
+  const balance = income - totalExpense;
 
-  // Submit handler
-  const handelsubmit = () => {
-    const newErrors = {};
-    if (!expensename.trim()) newErrors.expensename = 'Expense name is required';
-    if (!expenseamount || expenseamount <= 0)
-      newErrors.expenseamount = 'Amount must be greater than 0';
-    if (!catogery) newErrors.catogery = 'Please select a category';
-    if (!date) newErrors.date = 'Please select a date';
+  const categoryTotals = useMemo(() => {
+    return expensedata.reduce((acc, e) => {
+      acc[e.category] = (acc[e.category] || 0) + Number(e.amount);
+      return acc;
+    }, {});
+  }, [expensedata]);
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+  // 4. CHART DATA
+  const chartData = {
+    labels: Object.keys(categoryTotals),
+    datasets: [{
+      label: 'Expenses by Category',
+      data: Object.values(categoryTotals),
+      backgroundColor: [
+        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+      ],
+      hoverOffset: 4
+    }]
+  };
+
+  // 5. HANDLERS
+  const handleAddExpense = (e) => {
+    e.preventDefault();
+    if (!form.name || !form.amount || !form.category || !form.date) {
+      setErrors({ general: "All fields are required" });
       return;
     }
 
-    setErrors({});
-
-    const expenseobj = {
-      id,
-      expensename,
-      expenseamount,
-      catogery,
-      date,
+    const newExpense = {
+      id: Date.now(), // Better unique ID than array length
+      ...form,
+      amount: Number(form.amount)
     };
 
-    setExpensedataSafe(expenseobj);
-
-    // Reset form
-    setexpensename('');
-    setexpenseamount('');
-    setcatogery('');
-    setdate('');
+    setexpensedata([newExpense, ...expensedata]);
+    setForm({ name: '', amount: '', category: '', date: '' });
+    setErrors({});
   };
 
-  // Safely update expensedata and then fooddata
-  const setExpensedataSafe = (expenseobj) => {
-    setexpensedata((prev) => [...prev, expenseobj]);
+  const deleteExpense = (id) => {
+    setexpensedata(expensedata.filter(exp => exp.id !== id));
   };
-
-  // Effect to update fooddata after expensedata changes
-  useEffect(() => {
-    if (expensedata.length === 0) return;
-
-    // Update in a microtask to avoid synchronous state update warning
-    const timeout = setTimeout(() => {
-      const foodExpenses = expensedata
-        .filter((item) => item.catogery === 'food')
-        .map((item, index) => ({ ...item, id: index }));
-
-      setfooddata(foodExpenses);
-    }, 0);
-
-    return () => clearTimeout(timeout);
-  }, [expensedata]);
-
-  // Log effect
-  useEffect(() => {
-    console.log('All Expenses:', expensedata);
-    console.log('Food Expenses:', fooddata);
-  }, [expensedata, fooddata]);
 
   return (
-    <div className="min-h-screen flex bg-gray-100 px-4  not-lg:justify-center ">
-      <div className="w-[90%] max-w-4xl bg-white rounded-2xl shadow-xl p-4 md:p-10">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-          Expense Tracker
-        </h1>
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8 font-sans text-gray-900">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        <div className="flex flex-col md:flex-row md:items-end md:gap-4 gap-4">
-          {/* Expense Name */}
-          <div className="flex flex-col md:w-1/4 w-full">
-            <label className="text-sm font-medium text-gray-600 mb-1">
-              Expense Name
-            </label>
+        {/* LEFT COLUMN: Input & Budget */}
+        <div className="lg:col-span-1 space-y-6">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <Wallet className="text-blue-500" /> Budget Overview
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-gray-500">Monthly Income</label>
+                <input
+                  type="number"
+                  value={income}
+                  onChange={(e) => setIncome(Number(e.target.value))}
+                  className="w-full text-2xl font-bold border-b focus:border-blue-500 outline-none"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 bg-green-50 rounded-lg">
+                  <p className="text-xs text-green-600">Balance</p>
+                  <p className={`font-bold ${balance < 0 ? 'text-red-500' : ''}`}>${balance.toFixed(2)}</p>
+                </div>
+                <div className="p-3 bg-red-50 rounded-lg">
+                  <p className="text-xs text-red-600">Spent</p>
+                  <p className="font-bold">${totalExpense.toFixed(2)}</p>
+                </div>
+              </div>
+              {balance < 0 && (
+                <div className="flex items-center gap-2 p-3 bg-red-100 text-red-700 rounded-lg text-sm animate-pulse">
+                  <AlertTriangle size={16} /> Budget Exceeded!
+                </div>
+              )}
+            </div>
+          </div>
+
+          <form onSubmit={handleAddExpense} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+            <h3 className="font-bold text-lg">Add New Expense</h3>
             <input
-              type="text"
-              placeholder="Coffee, Uber, Rent"
-              value={expensename}
-              onChange={(e) => setexpensename(e.target.value)}
-              className="px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              placeholder="Expense Name"
+              className="w-full p-3 border rounded-xl"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
-            {errors.expensename && (
-              <span className="text-xs text-red-500 mt-1">{errors.expensename}</span>
-            )}
-          </div>
-
-          {/* Amount */}
-          <div className="flex flex-col md:w-1/4 w-full">
-            <label className="text-sm font-medium text-gray-600 mb-1">Amount</label>
-            <input
-              type="number"
-              placeholder="0"
-              value={expenseamount}
-              onChange={(e) => setexpenseamount(e.target.valueAsNumber)}
-              className="px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-            />
-            {errors.expenseamount && (
-              <span className="text-xs text-red-500 mt-1">{errors.expenseamount}</span>
-            )}
-          </div>
-
-          {/* Category */}
-          <div className="flex flex-col md:w-1/4 w-full">
-            <label className="text-sm font-medium text-gray-600 mb-1">Category</label>
-            <select
-              value={catogery}
-              onChange={(e) => setcatogery(e.target.value)}
-              className="px-4 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-black"
-            >
-              <option value="">Select</option>
-              <option value="food">Food & Dining</option>
-              <option value="travel">Travel</option>
-              <option value="shopping">Shopping</option>
-              <option value="rent">Rent</option>
-              <option value="utilities">Utilities</option>
-              <option value="transport">Transport</option>
-              <option value="health">Health</option>
-              <option value="entertainment">Entertainment</option>
-              <option value="education">Education</option>
-              <option value="subscription">Subscriptions</option>
-            </select>
-            {errors.catogery && (
-              <span className="text-xs text-red-500 mt-1">{errors.catogery}</span>
-            )}
-          </div>
-
-          {/* Date */}
-          <div className="flex flex-col md:w-1/4 w-full">
-            <label className="text-sm font-medium text-gray-600 mb-1">Date</label>
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                type="number"
+                placeholder="Amount"
+                className="p-3 border rounded-xl"
+                value={form.amount}
+                onChange={(e) => setForm({ ...form, amount: e.target.value })}
+              />
+              <select
+                className="p-3 border rounded-xl bg-white"
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+              >
+                <option value="">Category</option>
+                <option value="food">Food</option>
+                <option value="transport">Transport</option>
+                <option value="rent">Rent</option>
+                <option value="entertainment">Fun</option>
+              </select>
+            </div>
             <input
               type="date"
-              value={date}
-              onChange={(e) => setdate(e.target.value)}
-              className="px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full p-3 border rounded-xl"
+              value={form.date}
+              onChange={(e) => setForm({ ...form, date: e.target.value })}
             />
-            {errors.date && (
-              <span className="text-xs text-red-500 mt-1">{errors.date}</span>
-            )}
-          </div>
-
-          {/* Button */}
-          <div className="md:w-auto w-full">
-            <button
-              onClick={handelsubmit}
-              disabled={isFormInvalid}
-              className={`
-                w-full md:w-auto
-                px-8 py-3
-                rounded-lg
-                font-medium
-                transition
-                ${isFormInvalid
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-black text-white hover:bg-gray-900'}
-              `}
-            >
-              Add
+            <button type="submit" className="w-full bg-black text-white p-3 rounded-xl font-bold hover:bg-gray-800 transition flex items-center justify-center gap-2">
+              <PlusCircle size={20} /> Add Expense
             </button>
+          </form>
+        </div>
+
+        {/* RIGHT COLUMN: Visualization & History */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              <h3 className="font-bold mb-4">Spending Breakdown</h3>
+              <div className="h-64">
+                {expensedata.length > 0 ? (
+                  <Doughnut data={chartData} options={{ maintainAspectRatio: false }} />
+                ) : (
+                  <div className="h-full flex items-center justify-center text-gray-400">No data yet</div>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 overflow-y-auto max-h-[400px]">
+              <h3 className="font-bold mb-4">Recent History</h3>
+              <div className="space-y-3">
+                {expensedata.map((exp) => (
+                  <div key={exp.id} className="flex justify-between items-center p-3 border-b hover:bg-gray-50 transition">
+                    <div>
+                      <p className="font-medium">{exp.name}</p>
+                      <p className="text-xs text-gray-400">{exp.date} • <span className="capitalize">{exp.category}</span></p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="font-bold">-${exp.amount}</span>
+                      <button onClick={() => deleteExpense(exp.id)} className="text-gray-300 hover:text-red-500">
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
