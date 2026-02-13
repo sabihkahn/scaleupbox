@@ -7,6 +7,9 @@ export const createClientInfo = async (req, res) => {
     try {
         const { name, email, phone, address } = req.body;
 
+        if(!name || !email || !phone || !address){
+            res.status(400).send({message:"all info are required"})
+        }
         const newClientInfo = new ClientInfo({
             name,
             email,
@@ -44,6 +47,9 @@ export const getClientInfos = async (req, res) => {
 export const deleteClientInfo = async (req, res) => {
     try {
         const { clientId } = req.query;
+        if(!clientId){
+            res.status(400).send({message:"client id is required in req.query "})
+        }
         console.log(clientId);
         const deletedClientInfo = await ClientInfo.findByIdAndDelete(clientId);
         if (!deletedClientInfo) {

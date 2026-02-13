@@ -46,8 +46,11 @@ const authSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "ClientInfo",
     required: false
-  }]
- 
+  }],
+ portfoliowebsites:[{
+  type:mongoose.Schema.Types.ObjectId,
+   ref:'Portfolio'
+ }]
 
 }, { timestamps: true })
 

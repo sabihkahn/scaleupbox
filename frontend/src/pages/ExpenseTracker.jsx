@@ -185,7 +185,7 @@ const ExpenseTracker = () => {
                     </div>
                     <div className="flex items-center gap-4">
                       <span className="font-bold">-${exp.amount}</span>
-                      <button onClick={() => deleteExpense(exp.id)} className="text-gray-300 hover:text-red-500">
+                      <button onClick={() => deleteExpense(exp.id)} className="text-gray-500 hover:text-red-500">
                         <Trash2 size={18} />
                       </button>
                     </div>

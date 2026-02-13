@@ -12,6 +12,7 @@ import aiwebsiteroute from './Routes/AIroutes/airoute.js'
 import removebgroute from './Routes/rmbg/removebg.js'
 import  imgsavedroute from './Routes/imgsaveddb/imgdbsave.js'
 import client from './Routes/clientsdataroute/clientroute.js'
+import portfolioroute from './Routes/portfoliogenrator/portfolioroute.js'
 app.set("trust proxy", 1);
 
 // connecting database 
@@ -41,6 +42,7 @@ app.use('/ai',aiwebsiteroute)
 app.use('/photo',removebgroute)
 app.use('/imgstorage',imgsavedroute)
 app.use('/client',client);
+app.use('/',portfolioroute)
 // routes test  
 
 app.get('/', (req, res) => {
