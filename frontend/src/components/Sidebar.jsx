@@ -14,7 +14,7 @@ motion
 
 import { useContext } from 'react';
 import { DashboardContext } from '../context/DashboardContext';
-import { Crop, File, ListCheck, PenSquareIcon, PersonStanding, QrCode, Upload } from 'lucide-react';
+import { Code2, Crop, File, ListCheck, PenSquareIcon, PersonStanding, QrCode, Upload } from 'lucide-react';
 
 const Sidebar = () => {
     const { setcurrentpage } = useContext(DashboardContext);
@@ -45,7 +45,14 @@ const Sidebar = () => {
                       <HomeIcon className="h-6" />
                       <span>Home</span>
                   </div>
-
+                  {/* {PortfolioGenrator } */}
+                  <div
+                      className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
+                      onClick={() => handelclik("PortfolioGenrator")}
+                  >
+                      <Code2 className="h-6" />
+                      <span>PortfolioGenrator</span>
+                  </div>
                   <div
                       className="flex items-center cursor-pointer gap-3 p-2 rounded hover:bg-gray-800"
                        onClick={() => handelclik("Bgremover")}
