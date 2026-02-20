@@ -20,7 +20,7 @@ router.post("/portfolio/create", authorization, async (req, res) => {
     const Savedportfolio = await Auth.findByIdAndUpdate(id, { $push: { portfoliowebsites: portfolio._id } })
     const redisdata = JSON.stringify(portfolio)
     redis.set(slug, redisdata, "EX", 60 * 30)
-    res.status(200).send({ message: "portfolio created successfully", url: `http://localhost:4000/portfolio/${slug}` })
+    res.status(200).send({ message: "portfolio created successfully", url: `/portfolio/${slug}` })
 
 
   } catch (error) {
@@ -33,7 +33,7 @@ router.post("/portfolio/create", authorization, async (req, res) => {
 
 
 router.get("/portfolio/:slug", async (req, res) => {
-
+  console.log("Slug route hit:", req.params.slug)
   const portfolioSlug = req.params.slug;
 
   if (!portfolioSlug) {
@@ -44,18 +44,27 @@ router.get("/portfolio/:slug", async (req, res) => {
     let htmldata;
 
     const dataredis =await redis.get(portfolioSlug)
+  
+    
     if(dataredis){
-      htmldata = dataredis
+      htmldata = JSON.parse(dataredis)
       console.log('from redis')
     }
     else{
     const data = await Portfolio.findOne({slug:portfolioSlug})
+      if (!data) {
+        return res.status(404).send({ message: "Portfolio not found" });
+      }
+      if (data.isPublished === false) {
+        return res.status(403).send({ message: "Portfolio is not published yet" });
+      }
+      data.clicks = (data.clicks || 0) + 1;
+    await data.save()
+    redis.set(portfolioSlug, JSON.stringify(data), "EX", 10 * 10)
     htmldata = data
-      if(!data){
-        res.status(400).send({message:"cant found portfolio"})
-      }   
+     
   }
- console.log(htmldata);
+ console.log("htmldata recived");
  
 
     const rawhtml = `
@@ -221,9 +230,96 @@ res.status(200).send(rawhtml)
     res.status(400).send({ messaage: "an error occur while geting website", error })
   }
 
+});
 
 
+router.delete("/portfolio/delete/:id", authorization, async (req, res) => {
+  const id = req.id
+  const portfolioId = req.params.id
+
+  if (!portfolioId) {
+    return res.status(400).send({ message: "please give a proper url" })
+  }
+
+  try {
+    const portfolio = await Portfolio.findById(portfolioId)
+    if (!portfolio) {
+      return res.status(400).send({ message: "cant found portfolio" })
+    }
+
+    const auth = await Auth.findById(id)
+    if (!auth) {
+      return res.status(400).send({ message: "cant found user" })
+    }
+
+    if (auth.portfoliowebsites.includes(portfolioId)) {
+      await Portfolio.findByIdAndDelete(portfolioId)
+      await Auth.findByIdAndUpdate(id, { $pull: { portfoliowebsites: portfolioId } })
+      res.status(200).send({ message: "portfolio deleted successfully" })
+    }
+    else {
+      res.status(400).send({ message: "you are not authorized to delete this portfolio" })
+    }
+
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ messaage: "an error occur while deleting portfolio", error })
+  }
 
 });
+
+router.get("/portfolio-all", authorization, async (req, res) => {
+  const id = req.id
+
+  try {
+    const auth = await Auth.findById(id).populate("portfoliowebsites").select("_id slug profile")
+    if (!auth) {
+      return res.status(400).send({ message: "cant found user" })
+    }
+
+    res.status(200).send({ portfoliowebsites: auth.portfoliowebsites })
+
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ messaage: "an error occur while getting portfolios", error })
+  }
+
+});
+
+// router.put('/enable-disable-portfolio/:id', authorization, async (req, res) => {
+//   const id = req.id
+//   const portfolioId = req.params.id
+
+//   if (!portfolioId) {
+//     return res.status(400).send({ message: "please give a proper url" })
+//   }
+
+//   try {
+//     const portfolio = await Portfolio.findById(portfolioId)
+//     if (!portfolio) {
+//       return res.status(400).send({ message: "cant found portfolio" })
+//     }
+
+//     const auth = await Auth.findById(id)
+//     if (!auth) {
+//       return res.status(400).send({ message: "cant found user" })
+//     }
+
+//     if (auth.portfoliowebsites.includes(portfolioId)) {
+//       portfolio.isPublished = !portfolio.isPublished
+//       await portfolio.save()
+//       res.status(200).send({ message: `portfolio ${portfolio.isPublished ? "enabled" : "disabled"} successfully` })
+//     }
+//     else {
+//       res.status(400).send({ message: "you are not authorized to update this portfolio" })
+//     }
+
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).send({ messaage: "an error occur while updating portfolio", error })
+//   }
+
+// });
+
 
 export default router;

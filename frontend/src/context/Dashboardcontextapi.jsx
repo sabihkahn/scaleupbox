@@ -16,7 +16,7 @@ const Dashboardcontextapi = ({children}) => {
           const fetchDashboard = async () => {
               try {
                   const res = await api.get("/user/data/dashboard"); // Protected API
-                  setDashboardData(res.data);
+                  setDashboardData(res.data.data[0]);
                   setLoading(false);
                   console.log(res.data);
                   

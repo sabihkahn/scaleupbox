@@ -2,27 +2,34 @@
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
 import User from "../models/authmodel.js";
+import mongoose from 'mongoose';
 
 export const dashborddata = async (req, res) => {
     try {
-        const id = req.id
-        const user = await User.findById(id)
-        if (!user) {
-            return res.status(401).json({ message: "user dont exist" });
-        }
+        const id = new mongoose.Types.ObjectId(req.id)
+        const user = await User.aggregate([
+            {$match:{_id:id}},
+            { $project: { 
+                username:1,
+
+                picture:1,
+                totalbgremoveimgs:{$size:"$bgremoveimgs"} ,
+                totalimgstroage:{$size:"$imgstroage"},
+                totalclientinfo:{$size:"$clientinfo"},
+                totalportfoliowebsites: { $size: "$portfoliowebsites"}
+            }}
+
+        ]
+    )   
+// console.log(user);
+
+if(!user.length > 0){
+    return res.status(404).send({ message: "user not found" })
+}
+
+
+ res.status(200).send({ message: "data get successfully", data: user })
         
-
-
-
-        return res.status(200).send({
-            id:user._id,
-            username: user.username,
-            picture: user.picture,
-            availableTokens: user.availableTokens,
-           
-        })
-
-
 
 
     } catch (error) {

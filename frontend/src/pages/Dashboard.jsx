@@ -33,7 +33,7 @@ console.log(currentpage);
   return (
     <>
 
-      <div className=" lg:overflow-y-hidden h-screen w-full m-0 p-0 flex flex-col lg:flex-row">
+      <div className="overflow-y-scroll lg:overflow-y-hidden h-screen w-full m-0 p-0 flex flex-col lg:flex-row">
 
         {/* left div with 22percent width */}
 

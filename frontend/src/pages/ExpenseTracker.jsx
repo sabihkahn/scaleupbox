@@ -83,7 +83,7 @@ const ExpenseTracker = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8 font-sans text-gray-900">
+    <div className="min-h-screen overflow-y-scroll p-7 bg-gray-50 mb-6 md:p-8 font-sans text-gray-900">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
         {/* LEFT COLUMN: Input & Budget */}
