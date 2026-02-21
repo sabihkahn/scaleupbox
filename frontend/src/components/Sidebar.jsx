@@ -97,7 +97,7 @@ console.log(currentpage1);
                 </div>
 
                 {/* Footer/Settings Area */}
-                <div className='mt-auto p-6 border-t border-zinc-900'>
+                <div className='mt-auto p-6 border-t border-zinc-900' onClick={() => handelclik("Settings")}>
                     <div className='flex items-center gap-3 px-4 py-3 cursor-pointer text-zinc-500 hover:text-white transition-colors'>
                         <Cog6ToothIcon className='h-5 w-5' />
                         <span className='text-sm font-medium'>Settings</span>

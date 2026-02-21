@@ -22,6 +22,7 @@ import Cropimage from './Cropimage';
 import ExpenseTracker from './ExpenseTracker';
 import PortfolioGenrator from './PortfolioGenrator';
 
+import Settings from './Settings';
 
 const Dashboard = () => {
 
@@ -47,7 +48,7 @@ console.log(currentpage);
 
 
           {/* cards */}
-          {currentpage == "Bgremover" ? <Bgremover /> : currentpage == "ImageStroge" ? <ImageStroge /> : currentpage == "Invoicegenrator" ? <Invocegenrator /> : currentpage == "Qrcodegenrator" ? <QRcodegenrator /> : currentpage == "Pdfmerger" ? <Pdfmerger /> : currentpage == "ResumeBuilder" ? <ResumeBuilder /> : currentpage == "SaveClientData" ? <SaveClientData /> : currentpage == "Cropimage" ? <Cropimage /> : currentpage == "ExpenseTracker" ? <ExpenseTracker /> : currentpage == "PortfolioGenrator" ? <PortfolioGenrator /> : <div><Card /></div>}
+          {currentpage == "Bgremover" ? <Bgremover /> : currentpage == "ImageStroge" ? <ImageStroge /> : currentpage == "Invoicegenrator" ? <Invocegenrator /> : currentpage == "Qrcodegenrator" ? <QRcodegenrator /> : currentpage == "Pdfmerger" ? <Pdfmerger /> : currentpage == "ResumeBuilder" ? <ResumeBuilder /> : currentpage == "SaveClientData" ? <SaveClientData /> : currentpage == "Cropimage" ? <Cropimage /> : currentpage == "ExpenseTracker" ? <ExpenseTracker /> : currentpage == "PortfolioGenrator" ? <PortfolioGenrator /> : currentpage == "Settings" ? <Settings /> : <div><Card /></div>}
           {/* Card closed */}
         </div>
 

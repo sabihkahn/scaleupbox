@@ -77,8 +77,8 @@ const Header = () => {
                             <button onClick={() => handleNav("SaveClientData")} className="text-left">
                                 <PenSquare />   SaveClientData
                             </button>
-                            {/* SaveClientData */}
-                            <button onClick={() => navigate("/settings")} className="text-left">
+                            
+                            <button onClick={() => handleNav("Settings")} className="text-left">
                              <Settings />   Settings
                             </button>
 

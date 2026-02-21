@@ -2,7 +2,7 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Auth from './pages/Auth'
 import "@radix-ui/themes/styles.css";
-
+import { Toaster } from 'react-hot-toast';
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from './security/protectedroutes';
 import AuthLogin from './pages/AuthLogin'
@@ -13,7 +13,7 @@ const App = () => {
 
   return (
     <>
-
+      <Toaster position="top-center" reverseOrder={false} />
       <Routes>
 
         <Route path='/dashboard' element={

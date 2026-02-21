@@ -92,12 +92,18 @@ export const refreshToken = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
-        const refreshToken = req.cookies.refreshToken;
-        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-        if (!refreshToken) {
-            return res.status(400).json({ message: "No refresh token provided" });
-        }
-        await redis.del(decoded.id);
+        const id = req.id
+    if(!id){
+        return res.status(400).json({message:"user id not found in request"})
+    }
+
+        // const refreshToken = req.cookies.refreshToken;
+        // console.log("this is refresh token in logout", refreshToken)
+        // if (!refreshToken) {
+        //     return res.status(400).json({ message: "No refresh token provided" });
+        // }
+        // const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        // await redis.del(decoded.id);
         res.clearCookie('refreshToken', {
             httpOnly: true,
             secure: false, // true in production
@@ -108,6 +114,8 @@ export const logout = async (req, res) => {
             message: "User logged out successfully"
         });
     } catch (error) {
+        console.log(error);
+        
         res.status(500).json({ message: "Something went wrong while logout", error });
     }
 }
@@ -238,6 +246,9 @@ export const otpsender = async (req, res) => {
         // sending otp through  email logic here
         const transporter = nodemailer.createTransport({
             service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true, // use SSL
             auth: {
                 user: process.env.gmail_user,
                 pass: process.env.app_pass
@@ -332,8 +343,11 @@ export const changeexistingpassword = async (req, res) => {
         const user = await User.findOne({email:email}) 
         if(!user){
             return res.status(400).send({message:"no user existed"})
-        }   
-        const isMached = bycrptjs.compare(password,user.password)
+        }  
+        if(user.password === undefined){
+            return res.status(400).send({message:"user registered with google auth cant change password"})
+        } 
+        const isMached = await bycrptjs.compare(password,user.password)
         if(!isMached){
             return res.status(400).send({message:"password does`t match to old password"})
         }
