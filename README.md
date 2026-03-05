@@ -1,389 +1,361 @@
-# ScaleUpBox
-
-A full-stack web application for project management with authentication and cloud storage capabilities. This project features a modern React frontend with Vite, an Express backend with MongoDB, and integrates Google OAuth for seamless authentication.
-
-## 📋 Table of Contents
-
-- [Project Overview](#project-overview)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Running the Application](#running-the-application)
-- [Project Structure](#project-structure)
-- [Features](#features)
-- [API Endpoints](#api-endpoints)
-- [Environment Variables](#environment-variables)
-- [Contributing](#contributing)
-- [License](#license)
-
-## 🎯 Project Overview
-
-**ScaleUpBox** is a comprehensive project management platform that enables users to:
-
-- **Authenticate** securely using email/password or Google OAuth
-- **Manage projects** in both monolithic and microservice architectures
-- **Handle user profiles** with image uploads to Cloudinary
-- **Access protected routes** with JWT token-based authorization
-- **Experience rate limiting** for API security
-
-The application is built as a client-server architecture with separate frontend (React) and backend (Node.js) implementations.
-
-## 🛠️ Tech Stack
-
-### Frontend
-- **Framework**: React 19.2.0
-- **Build Tool**: Vite 7.2.4
-- **Styling**: Tailwind CSS 4.1.17 + Tailwind Merge
-- **UI Components**: shadcn UI (Label, Separator, Slot)
-- **Icons**: Lucide React 0.555.0
-- **Routing**: React Router DOM 7.9.6
-- **HTTP Client**: Axios 1.13.2
-- **Authentication**: Google OAuth (@react-oauth/google)
-- **Image Upload**: Cloudinary
-- **Notifications**: React Toastify 11.0.5
-- **Linting**: ESLint 9.39.1
-
-### Backend
-- **Runtime**: Node.js with ES Modules
-- **Framework**: Express 5.1.0
-- **Database**: MongoDB with Mongoose 9.0.0
-- **Caching**: Redis with ioredis 5.8.2
-- **Authentication**: JWT (jsonwebtoken 9.0.2) + Google Auth Library
-- **Password Hashing**: bcryptjs 3.0.3
-- **CORS**: Enabled for cross-origin requests
-- **Environment**: Dotenv 17.2.3
-- **Development**: Nodemon 3.1.11
-
-## 🏗️ Architecture
-
-```
-ScaleUpBox (Full-Stack Application)
-│
-├── Frontend (React + Vite)
-│   └── Communicates via REST API
-│
-└── Backend (Express + Node.js)
-    ├── Authentication Service (Google OAuth + JWT)
-    ├── Database (MongoDB via Mongoose)
-    ├── Cache Layer (Redis)
-    └── Rate Limiting Middleware
-```
-
-## 📋 Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Node.js**: v18.0.0 or higher
-- **npm**: v9.0.0 or higher
-- **MongoDB**: Local instance or MongoDB Atlas connection
-- **Redis**: Local instance (for caching)
-- **Git**: For version control
-
-### Required Accounts
-- **Google Cloud**: For OAuth credentials
-- **Cloudinary**: For image uploads
-
-## 🚀 Installation
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/sabihkahn/scaleupbox.git
-cd scaleupbox
-```
-
-### Backend Setup
-
-```bash
-cd backend
-npm install
-```
-
-### Frontend Setup
-
-```bash
-cd frontend
-npm install
-```
-
-## ⚙️ Configuration
-
-### Backend Environment Variables
-
-Create a `.env` file in the `backend` directory:
-
-```env
-# Server Configuration
-PORT=4000
-NODE_ENV=development
-
-# Database
-MONGODB_URI=mongodb://localhost:27017/scaleupbox
-# Or use MongoDB Atlas
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/scaleupbox
-
-# Redis
-REDIS_URL=redis://localhost:6379
-
-# JWT Secrets
-ACCESS_TOKEN_SECRET=your_access_token_secret_here
-REFRESH_TOKEN_SECRET=your_refresh_token_secret_here
-
-# Google OAuth
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-
-# CORS
-CORS_ORIGIN=http://localhost:5173
-```
-
-### Frontend Environment Variables
-
-Create a `.env` file in the `frontend` directory:
-
-```env
-# API Configuration
-VITE_BASE_URL=http://localhost:4000
-
-# Google OAuth
-VITE_CLIENT_ID=your_google_client_id
-VITE_CLIENT_SECRET=your_google_client_secret
-
-# Cloudinary
-VITE_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
-```
-
-## 🎮 Running the Application
-
-### Development Mode
-
-#### Terminal 1 - Backend Server
-
-```bash
-cd backend
-npm run dev
-```
-
-The backend server will start on `http://localhost:4000`
-
-#### Terminal 2 - Frontend Development Server
-
-```bash
-cd frontend
-npm run dev
-```
-
-The frontend will be available at `http://localhost:5173`
-
-### Production Build
-
-#### Frontend Build
-
-```bash
-cd frontend
-npm run build
-npm run preview
-```
-
-## 📁 Project Structure
-
-### Backend Structure
-
-```
-backend/
-├── config/
-│   ├── db.js                 # MongoDB connection configuration
-│   └── redis.js              # Redis connection setup
-├── controller/
-│   └── authcontroller.js     # Authentication logic (Google OAuth, Login, Signup)
-├── middleware/
-│   ├── ratelimiting.js       # Rate limiting middleware
-│   └── googleResponse/
-│       └── verifygetpayload.js  # Google token verification
-├── models/
-│   ├── authmodel.js          # User schema
-│   ├── apischema.js          # API schema definitions
-│   ├── microserviceproject/
-│   │   └── microservicemodel.js  # Microservice project schema
-│   └── monolothicproject/
-│       └── projectmodel.js   # Monolithic project schema
-├── Routes/
-│   └── AuthRoutes/
-│       └── authroute.js      # Authentication endpoints
-├── .env                      # Environment variables
-├── .gitignore               # Git ignore rules
-├── package.json             # Dependencies & scripts
-└── server.js                # Express server setup
-```
-
-### Frontend Structure
-
-```
-frontend/
-├── public/                  # Static assets
-├── src/
-│   ├── assets/             # Images, fonts, etc.
-│   ├── cloudinary/
-│   │   └── Cloudinary.jsx  # Cloudinary image upload component
-│   ├── components/
-│   │   ├── BearWithEyes.jsx # Custom component
-│   │   ├── login-form.jsx   # Login form component
-│   │   ├── signup-form.jsx  # Signup form component
-│   │   └── ui/              # Reusable UI components
-│   │       ├── button.jsx
-│   │       ├── field.jsx
-│   │       ├── input.jsx
-│   │       ├── label.jsx
-│   │       └── separator.jsx
-│   ├── lib/
-│   │   └── utils.js        # Utility functions
-│   ├── pages/
-│   │   ├── Auth.jsx        # Signup page
-│   │   ├── AuthLogin.jsx   # Login page
-│   │   └── Dashboard.jsx   # Protected dashboard page
-│   ├── security/
-│   │   └── protectedroutes.jsx  # Route protection wrapper
-│   ├── App.jsx             # Main App component with routing
-│   ├── index.css           # Global styles
-│   └── main.jsx            # React entry point
-├── .env                    # Environment variables
-├── .gitignore             # Git ignore rules
-├── eslint.config.js       # ESLint configuration
-├── jsconfig.json          # JavaScript configuration
-├── package.json           # Dependencies & scripts
-├── vite.config.js         # Vite configuration
-└── index.html             # HTML entry point
-```
-
-## ✨ Features
-
-### Authentication
-- ✅ **Google OAuth Integration**: Sign up/login with Google
-- ✅ **Email/Password Authentication**: Traditional authentication method
-- ✅ **JWT Tokens**: Secure token-based authorization
-- ✅ **Refresh Tokens**: Extended session management with 7-day refresh tokens
-- ✅ **Password Hashing**: bcryptjs encryption for security
-
-### Project Management
-- ✅ **Monolithic Projects**: Traditional single-codebase projects
-- ✅ **Microservice Projects**: Distributed service-based projects
-- ✅ **Project CRUD Operations**: Create, read, update, delete projects
-
-### Security Features
-- ✅ **Rate Limiting**: 5 requests per 30 seconds per IP
-- ✅ **CORS Protection**: Configured for localhost:5173
-- ✅ **Protected Routes**: Dashboard and protected endpoints
-- ✅ **Token-based Authorization**: JWT validation
-
-
-### Image Management
-- ✅ **Cloudinary Integration**: Cloud-based image storage
-- ✅ **User Profile Pictures**: Upload and manage profile images
-
-### Caching
-- ✅ **Redis Integration**: Caching layer for performance
-- ✅ **Session Management**: Redis-backed sessions
-
-## 📡 API Endpoints
-
-### Authentication Routes (`/auth`)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/auth/user/signup` | Register a new user |
-| POST | `/auth/user/login` | Login with credentials |
-| POST | `/auth/user/google` | Google OAuth callback |
-| POST | `/auth/user/logout` | Logout user |
-| POST | `/auth/user/refresh` | Refresh access token |
-
-## 🔐 Environment Variables
-
-### Backend Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `PORT` | Server port | 4000 |
-| `NODE_ENV` | Environment (development/production) | development |
-| `MONGODB_URI` | MongoDB connection string | mongodb://localhost:27017/scaleupbox |
-| `REDIS_URL` | Redis connection URL | redis://localhost:6379 |
-| `ACCESS_TOKEN_SECRET` | JWT access token secret | Required |
-| `REFRESH_TOKEN_SECRET` | JWT refresh token secret | Required |
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID | Required |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth secret | Required |
-
-### Frontend Variables
-
-| Variable | Description |
-|----------|-------------|
-| `VITE_BASE_URL` | Backend API base URL |
-| `VITE_CLIENT_ID` | Google OAuth client ID |
-| `VITE_CLIENT_SECRET` | Google OAuth client secret |
-| `VITE_CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
-| `VITE_CLOUDINARY_UPLOAD_PRESET` | Cloudinary upload preset |
-
-## 📦 Available Scripts
-
-### Backend
-
-```bash
-npm run dev      # Start development server with Nodemon
-```
-
-### Frontend
-
-```bash
-npm run dev      # Start Vite dev server
-npm run build    # Build for production
-npm run lint     # Run ESLint
-npm run preview  # Preview production build
-```
-
-## 🐛 Troubleshooting
-
-### MongoDB Connection Issues
-- Ensure MongoDB is running: `mongod`
-- Verify connection string in `.env`
-- Check MongoDB Atlas credentials if using cloud database
-
-### Redis Connection Issues
-- Ensure Redis is running: `redis-server`
-- Verify Redis URL in `.env`
-
-### CORS Errors
-- Check that frontend URL is in backend CORS configuration
-- Ensure credentials are set to `true` in CORS options
-
-### Google OAuth Issues
-- Verify Google Client ID and Secret
-- Ensure redirect URIs are configured in Google Cloud Console
-- Check that credentials are in correct environment variables
-
-## 👤 Author
-
-**Sabih Khan** - Initial development and architecture
-
-## 📄 License
-
-This project is licensed under the ISC License - see `LICENSE` file for details.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📞 Support
-
-For support or questions, please contact the development team or create an issue in the repository.
+# 🚀 ScaleUBox
+
+![Node](https://img.shields.io/badge/Node.js-Backend-green)
+![Express](https://img.shields.io/badge/Express.js-Framework-black)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
+![Redis](https://img.shields.io/badge/Redis-Caching-red)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-Image%20Hosting-blue)
+![Docker](https://img.shields.io/badge/Docker-Container-blue)
+![AI](https://img.shields.io/badge/AI-Gemini-purple)
+
+ScaleUBox is a **developer-focused AI SaaS platform** that provides tools for creators, developers, and businesses.
+
+It integrates **AI services, cloud storage, authentication, portfolio generation, analytics, and client management** into a scalable backend architecture.
+
+This system is designed to be **modular, secure, and production-ready**.
+
+---
+# 🌟 Project Highlights
+
+ScaleUpBox includes **20+ powerful tools** for developers, freelancers, and creators.
+
+### 🧰 Core Tools
+
+| Tool | Description |
+|-----|-------------|
+| 🎨 Portfolio Builder | Generate developer portfolios instantly |
+| 📄 Resume Builder | Create professional resumes |
+| 🧾 Invoice Generator | Generate freelancer or business invoices |
+| 💰 Expense Tracker | Track income and expenses |
+| 🧠 AI Content Generator | Generate content using AI |
+| 🖼 Background Remover | Remove image backgrounds |
+| 🖼 Image Compressor | Compress large images |
+| 🔁 Image Converter | Convert images to different formats |
+| 📦 Image Storage | Store images with Cloudinary |
+| 🧾 Client Data Manager | Save and manage client data |
+| 📊 Dashboard Analytics | View project data and statistics |
+| 🔐 Authentication System | Secure login/register |
+| 📎 PDF Merger | Merge multiple PDFs |
+| ✂️ PDF Splitter | Split large PDF files |
+| 🗜 PDF Compressor | Compress large PDFs |
+| 🖼 PDF → Image | Convert PDFs to images |
+| 🖼 Image → PDF | Convert images to PDFs |
+| 📏 Image Resizer | Resize images easily |
+| ✂️ Image Cropper | Crop images |
+| 🏷 Bulk Image Rename | Rename multiple images |
+| 🔳 QR Code Generator | Generate QR codes |
+
+**Total Tools Built:** `20+`
 
 ---
 
-**Last Updated**: December 2025  
-**Current Version**: 1.0.0
+# 📸 Project Screenshots
+
+## 🏠 Home Dashboard
+
+![Dashboard](./frontend/src/assets/dashboard.png)
+
+---
+
+## 🎨 Portfolio Generator
+
+![Portfolio Builder](./frontend/src/assets/portfoliobuilder.png)
+
+---
+
+## 📄 Resume Builder
+
+![Resume Builder](./frontend/src/assets/ResumeBuilder.png)
+
+---
+
+## 💰 Expense Tracker
+
+![Expense Tracker](./frontend/src/assets/Expense.png)
+
+---
+
+## 🧾 Invoice Generator
+
+![Invoice Generator](./frontend/src/assets/invoice.png)
+
+---
+
+## 🖼 Background Remover
+
+![Background Remover](./frontend/src/assets/bgremove.png)
+
+---
+
+## 📂 Client Data Storage
+
+![Client Data](./src/assets/clientdatasave.png)
+# 🏗 System Architecture
+
+```
+Frontend
+   │
+   ▼
+API Gateway (Express Server)
+   │
+   ├── Authentication
+   ├── AI Services
+   ├── Portfolio Generator
+   ├── Client Management
+   ├── Image Processing
+   └── Dashboard Analytics
+   │
+   ▼
+Services Layer
+   │
+   ├── Gemini AI
+   ├── Cloudinary
+   ├── Redis Cache
+   └── MongoDB Database
+```
+
+---
+
+# 📁 Project Structure
+
+```
+ScaleUBox
+│
+├── README.md
+├── index.html
+│
+├── backend
+│   ├── .dockerignore
+│   ├── .env
+│   ├── .gitignore
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── server.js
+│
+│   ├── ai
+│   │   └── gemenaiai.js
+│
+│   ├── cloudinary
+│   │   └── cloudinary.js
+│
+│   ├── config
+│   │   ├── db.js
+│   │   └── redis.js
+│
+│   ├── controller
+│   │   ├── Dashboardcontroller.js
+│   │   ├── authcontroller.js
+│   │   └── clientdatacrntroller.js
+│
+│   ├── models
+│   │   ├── authmodel.js
+│   │   ├── clientsinfomodel.js
+│   │   └── portfoliomodel.js
+│
+│   ├── Routes
+│   │   ├── AIroutes
+│   │   │   └── airoute.js
+│   │   │
+│   │   ├── AuthRoutes
+│   │   │   └── authroute.js
+│   │   │
+│   │   ├── DashboardRoutes
+│   │   │   └── dashboardroutes.js
+│   │   │
+│   │   ├── clientsdataroute
+│   │   │   └── clientroute.js
+│   │   │
+│   │   ├── contactus
+│   │   │   └── contactus.js
+│   │   │
+│   │   ├── imgsaveddb
+│   │   │   └── imgdbsave.js
+│   │   │
+│   │   ├── portfoliogenrator
+│   │   │   └── portfolioroute.js
+│   │   │
+│   │   └── rmbg
+│   │       └── removebg.js
+│
+│   └── middleware
+│       ├── Authorization.js
+│       ├── ratelimiting.js
+│       └── googleResponse
+│           └── verifygetpayload.js
+```
+
+---
+
+# 🧰 Technology Stack
+
+### Backend
+- Node.js
+- Express.js
+
+### Database
+- MongoDB
+
+### Cache Layer
+- Redis
+
+### AI Integration
+- Gemini AI API
+
+### Media Storage
+- Cloudinary
+
+### Security
+- JWT Authentication
+- Rate Limiting
+- Authorization Middleware
+- Google Token Verification
+
+### DevOps
+- Docker
+
+---
+
+# 🔑 Environment Variables
+
+Create a `.env` file inside `backend`.
+
+Example:
+
+```
+PORT=5000
+
+MONGO_URI=your_mongodb_connection
+
+JWT_SECRET=your_secret_key
+
+REDIS_URL=your_redis_url
+
+GEMINI_API_KEY=your_gemini_api_key
+
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+
+---
+
+# ⚙️ Local Development
+
+### 1 Install dependencies
+
+```
+cd backend
+npm install
+```
+
+### 2 Start the server
+
+```
+node server.js
+```
+
+or
+
+```
+npm start
+```
+
+---
+
+# 🐳 Docker Deployment
+
+### Build Image
+
+```
+docker build -t scaleubox-backend .
+```
+
+### Run Container
+
+```
+docker run -p 5000:5000 scaleubox-backend
+```
+
+---
+
+# 📡 API Modules
+
+| Module | Purpose |
+|------|------|
+| Auth | Login and registration |
+| Dashboard | System analytics |
+| AI | AI content generation |
+| Portfolio | Portfolio builder |
+| Clients | Client data storage |
+| Images | Save images in database |
+| RemoveBG | Remove image backgrounds |
+| Contact | Contact form system |
+
+---
+
+# 🔒 Security Features
+
+ScaleUBox includes several production security systems:
+
+- JWT authentication
+- Protected API routes
+- Rate limiting middleware
+- Google OAuth verification
+- Secure environment variables
+- Middleware-based authorization
+
+---
+
+# 🚀 Future Improvements
+
+Planned upgrades for ScaleUBox:
+
+- Real-time AI chat
+- Team collaboration
+- AI image generator
+- SaaS subscription system
+- File storage system
+- Web dashboard UI
+- WebSocket support
+- AI automation tools
+
+---
+
+# 📊 Current Platform Stats
+
+| Category | Count |
+|------|------|
+| Feature Systems | 9 |
+| API Modules | 8 |
+| Controllers | 3 |
+| Models | 3 |
+| Middleware | 3 |
+| AI Integrations | 1 |
+| Cloud Integrations | 1 |
+
+---
+
+# 👨‍💻 Author
+
+**Abdul Ahad Khan**
+
+Full Stack Developer  
+Building scalable web applications and AI tools.
+
+---
+
+# ⭐ Contributing
+
+Contributions are welcome.
+
+1 Fork the repository  
+2 Create a new branch  
+3 Commit your changes  
+4 Submit a pull request
+
+---
+
+# 📜 License
+
+This project is licensed under the MIT License.

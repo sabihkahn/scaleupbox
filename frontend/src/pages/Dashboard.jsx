@@ -21,9 +21,15 @@ import SaveClientData from './SaveClientData';
 import Cropimage from './Cropimage';
 import ExpenseTracker from './ExpenseTracker';
 import PortfolioGenrator from './PortfolioGenrator';
-
+import Imagecompressor from './Imagecompressor'
 import Settings from './Settings';
-
+import Imageconvertor from './Imageconvertor';
+import ImageResizer from './ImageResizer';
+import BulkImageRename from './BulkImageRename';
+import PDFSplitter from './PDFSplitter';
+import Pdfcompressor from './Pdfcompressor';
+import Imagetopdf from './Imagetopdf';
+import PdfToimage from './PdfToimage';
 const Dashboard = () => {
 
 
@@ -48,7 +54,7 @@ console.log(currentpage);
 
 
           {/* cards */}
-          {currentpage == "Bgremover" ? <Bgremover /> : currentpage == "ImageStroge" ? <ImageStroge /> : currentpage == "Invoicegenrator" ? <Invocegenrator /> : currentpage == "Qrcodegenrator" ? <QRcodegenrator /> : currentpage == "Pdfmerger" ? <Pdfmerger /> : currentpage == "ResumeBuilder" ? <ResumeBuilder /> : currentpage == "SaveClientData" ? <SaveClientData /> : currentpage == "Cropimage" ? <Cropimage /> : currentpage == "ExpenseTracker" ? <ExpenseTracker /> : currentpage == "PortfolioGenrator" ? <PortfolioGenrator /> : currentpage == "Settings" ? <Settings /> : <div><Card /></div>}
+          {currentpage == "Bgremover" ? <Bgremover /> : currentpage == "ImageStroge" ? <ImageStroge /> : currentpage == "Invoicegenrator" ? <Invocegenrator /> : currentpage == "Qrcodegenrator" ? <QRcodegenrator /> : currentpage == "Pdfmerger" ? <Pdfmerger /> : currentpage == "ResumeBuilder" ? <ResumeBuilder /> : currentpage == "SaveClientData" ? <SaveClientData /> : currentpage == "Cropimage" ? <Cropimage /> : currentpage == "ExpenseTracker" ? <ExpenseTracker /> : currentpage == "PortfolioGenrator" ? <PortfolioGenrator /> : currentpage == "Imagecompressor" ? <Imagecompressor /> : currentpage == "Settings" ? <Settings /> : currentpage == "Imageconvertor" ? <Imageconvertor /> : currentpage == "ImageResizer" ? <ImageResizer /> : currentpage == "BulkImageRename" ? <BulkImageRename /> : currentpage == "PDFSplitter" ? <PDFSplitter /> : currentpage == "PDFCompressor" ? <Pdfcompressor /> : currentpage == "Imagetopdf" ? <Imagetopdf /> : currentpage == "PDFToimage" ? <PdfToimage /> : <div><Card /></div>}
           {/* Card closed */}
         </div>
 

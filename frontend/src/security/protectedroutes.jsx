@@ -15,9 +15,13 @@ const ProtectedRoute = ({ children }) => {
       } catch (err) {
         localStorage.removeItem("token");
         navigate("/auth");
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
         console.log(err);
         
       }
+      
     };
 
     verifyAuth();

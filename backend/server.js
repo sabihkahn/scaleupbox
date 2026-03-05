@@ -13,6 +13,7 @@ import removebgroute from './Routes/rmbg/removebg.js'
 import  imgsavedroute from './Routes/imgsaveddb/imgdbsave.js'
 import client from './Routes/clientsdataroute/clientroute.js'
 import portfolioroute from './Routes/portfoliogenrator/portfolioroute.js'
+import contactusroute from './Routes/contactus/contactus.js'
 app.set("trust proxy", 1);
 
 // connecting database 
@@ -43,6 +44,7 @@ app.use('/photo',removebgroute)
 app.use('/imgstorage',imgsavedroute)
 app.use('/client',client);
 app.use('/',portfolioroute)
+app.use('/', contactusroute)
 // routes test  
 
 app.get('/', (req, res) => {
