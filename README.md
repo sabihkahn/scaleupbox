@@ -338,7 +338,7 @@ Planned upgrades for ScaleUBox:
 
 # 👨‍💻 Author
 
-**Abdul Ahad Khan**
+**Sabih ur Rehman Khan**
 
 Full Stack Developer  
 Building scalable web applications and AI tools.
